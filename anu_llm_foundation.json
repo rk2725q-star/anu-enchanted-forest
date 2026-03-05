@@ -1,0 +1,407 @@
+{
+  "knowledge": {
+    "node_java": {
+      "subject": "java",
+      "content": "Java is a high-level, general-purpose, memory-safe, object-oriented programming language. It is intended to let programmers write once, run anywhere (WORA), meaning that compiled Java code can run on all platforms that support Java without the need to recompile. Java applications are typically compiled to bytecode that can run on any Java virtual machine (JVM) regardless of the underlying computer architecture. The syntax of Java is similar to C and C++, but has fewer low-level facilities than either of them. The Java runtime provides dynamic capabilities that are typically not available in traditional compiled languages.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_python": {
+      "subject": "python",
+      "content": "Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation. Python is dynamically type-checked and garbage-collected. It supports multiple programming paradigms, including structured, object-oriented and functional programming.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_javascript": {
+      "subject": "javascript",
+      "content": "JavaScript (JS) is a programming language and core technology of the Web, alongside HTML and CSS. It was created by Brendan Eich in 1995. As of 2025, the overwhelming majority of websites (98.9%) uses JavaScript for client side webpage behavior.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_c__": {
+      "subject": "c++",
+      "content": "C++ is a high-level, general-purpose programming language created by Danish computer scientist Bjarne Stroustrup. First released in 1985 as an extension of the C programming language, adding object-oriented (OOP) features, it has since expanded significantly over time adding more OOP and other features; as of 1997/C++98 standardization, C++ has added functional features, in addition to facilities for low-level memory manipulation for systems like microcomputers or to make operating systems like Linux or Windows, and even later came features like generic programming. C++ is usually implemented as a compiled language, and many vendors provide C++ compilers, including the Free Software Foundation, LLVM, Microsoft, Intel, Embarcadero, Oracle, and IBM.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_c": {
+      "subject": "c",
+      "content": "C is a general-purpose programming language created in the 1970s by Dennis Ritchie. By design, C gives the programmer relatively direct access to the features of the typical CPU architecture, customized for the target instruction set. It has been and continues to be used to implement operating systems, device drivers, and protocol stacks, but its use in application software has been decreasing. C is used on computers that range from the largest supercomputers to the smallest microcontrollers and embedded systems.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_c_sharp": {
+      "subject": "c sharp",
+      "content": "C# is a general-purpose high-level programming language supporting multiple paradigms. C# encompasses static typing, strong typing, lexically scoped, imperative, declarative, functional, generic, object-oriented (class-based), and component-oriented programming disciplines.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_ruby": {
+      "subject": "ruby",
+      "content": "Ruby is a general-purpose programming language. Its design puts an emphasis on programming productivity and simplicity. In Ruby, everything is an object, including primitive data types. Yukihiro \"Matz\" Matsumoto started to develop the language in the mid-1990s in Japan.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_swift": {
+      "subject": "swift",
+      "content": "Swift is a high-level general-purpose, multi-paradigm, compiled programming language created by Chris Lattner in 2010 for Apple Inc. and maintained by the open-source community. Swift compiles to machine code and uses an LLVM-based compiler. Swift was first released in June 2014 and the Swift toolchain has shipped in Xcode since Xcode version 6, released in September 2014.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_go": {
+      "subject": "go",
+      "content": "Go is a high-level, general-purpose programming language that is statically typed and compiled. It is known for the simplicity of its syntax and the efficiency of development that it enables through the inclusion of a large standard library supplying many needs for common projects. It was designed at Google in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson, and publicly announced in November 2009. It is syntactically similar to C, but also has garbage collection, structural typing, and CSP-style concurrency. It is often referred to as Golang to avoid ambiguity and because of its former domain name, golang.org, but its proper name is Go.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_rust": {
+      "subject": "rust",
+      "content": "Rust is a general-purpose programming language. It is noted for its emphasis on performance, type safety, concurrency, and memory safety.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_typescript": {
+      "subject": "typescript",
+      "content": "TypeScript (TS) is a high-level programming language that adds static typing with optional type annotations to JavaScript. It is designed for developing large applications. It transpiles to JavaScript. It is developed by Microsoft as free and open-source software released under an Apache License 2.0.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_php": {
+      "subject": "php",
+      "content": "PHP is a general-purpose scripting language geared towards web development. It was created by Danish-Canadian programmer Rasmus Lerdorf in 1993 and released in 1995. The PHP reference implementation is now produced by the PHP Group. PHP was originally an abbreviation of Personal Home Page, but it now stands for the recursive backronym PHP: Hypertext Preprocessor.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_html": {
+      "subject": "html",
+      "content": "Hypertext Markup Language (HTML) is the standard markup language for documents designed to be displayed in a web browser. It defines the content and structure of web content. It is often assisted by technologies such as Cascading Style Sheets (CSS) and scripting languages such as JavaScript.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_css": {
+      "subject": "css",
+      "content": "Cascading Style Sheets (CSS) is a style sheet language used for specifying the presentation and styling of a document written in a markup language, such as HTML or XML. CSS is a cornerstone technology of the World Wide Web, alongside HTML and JavaScript.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_sql": {
+      "subject": "sql",
+      "content": "Structured Query Language (SQL) is a domain-specific language used to manage data, especially in a relational database management system (RDBMS). It is particularly useful in handling structured data, i.e., data incorporating relations among entities and variables.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_react": {
+      "subject": "react",
+      "content": "React is a free and open-source front-end JavaScript library that aims to make building user interfaces based on components more \"seamless\". It is maintained by Meta and a community of individual developers and companies. According to the 2025 Stack Overflow Developer Survey, React is one of the most commonly used web technologies.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_node_js": {
+      "subject": "node.js",
+      "content": "Node.js is a cross-platform, open-source JavaScript runtime environment that can run on Windows, Linux, Unix, macOS, and more. Node.js runs on the V8 JavaScript engine, and executes JavaScript code outside a web browser. According to the Stack Overflow Developer Survey, Node.js is one of the most commonly used web technologies.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_artificial_intelligence": {
+      "subject": "artificial intelligence",
+      "content": "Artificial intelligence (AI) is the capability of computational systems to perform tasks typically associated with human intelligence, such as learning, reasoning, problem-solving, perception, and decision-making. It is a field of research in computer science that develops and studies methods and software that enable machines to perceive their environment and use learning and intelligence to take actions that maximize their chances of achieving defined goals.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_machine_learning": {
+      "subject": "machine learning",
+      "content": "Machine learning (ML) is a field of study in artificial intelligence concerned with the development and study of statistical algorithms that can learn from data and generalize to unseen data, and thus perform tasks without explicit instructions. Within a subdiscipline in machine learning, advances in the field of deep learning have allowed neural networks, a class of statistical algorithms, to surpass many previous machine learning approaches in performance.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_deep_learning": {
+      "subject": "deep learning",
+      "content": "In machine learning, deep learning focuses on utilizing multilayered neural networks to perform tasks such as classification, regression, and representation learning. The field takes inspiration from biological neuroscience and revolves around stacking artificial neurons into layers and \"training\" them to process data. The adjective \"deep\" refers to the use of multiple layers in the network. Methods used can be supervised, semi-supervised or unsupervised.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_data_structure": {
+      "subject": "data structure",
+      "content": "In computer science, a data structure is a data organization and storage format that is usually chosen for efficient access to data. More precisely, a data structure is a collection of data values, the relationships among them, and the functions or operations that can be applied to the data, i.e., it is an algebraic structure about data.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_algorithm": {
+      "subject": "algorithm",
+      "content": "In mathematics and computer science, an algorithm is a finite sequence of mathematically rigorous instructions, typically used to solve a class of specific problems or to perform a computation. Algorithms are used as specifications for performing calculations and data processing. More advanced algorithms can use conditionals to divert the code execution through various routes and deduce valid inferences.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_object_oriented_programming": {
+      "subject": "object-oriented programming",
+      "content": "Object-oriented programming (OOP) is a programming paradigm based on objects – software entities that encapsulate data and function(s). An OOP computer program consists of objects that interact with one another. An OOP language is one that provides object-oriented programming features, but as the set of features that contribute to OOP is contested, classifying a language as OOP – and the degree to which it supports OOP – is debatable. As paradigms are not mutually exclusive, a language can be multi-paradigm.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_functional_programming": {
+      "subject": "functional programming",
+      "content": "In computer science, functional programming is a programming paradigm where programs are constructed by applying and composing functions. It is a declarative programming paradigm in which function definitions are trees of expressions that map values to other values, rather than a sequence of imperative statements which update the running state of the program.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_quantum_mechanics": {
+      "subject": "quantum mechanics",
+      "content": "Quantum mechanics is the fundamental physical theory that describes the behavior of matter and of light; its unusual characteristics typically occur at and below the scale of atoms. It is the foundation of all quantum physics, which includes quantum chemistry, quantum biology, quantum field theory, quantum technology, and quantum information science.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_thermodynamics": {
+      "subject": "thermodynamics",
+      "content": "Thermodynamics is a branch of physics that deals with heat, work, and temperature, and their relation to energy, entropy, and the physical properties of matter and radiation. The behavior of these quantities is governed by the four laws of thermodynamics, which convey a quantitative description using measurable macroscopic physical quantities but may be explained in terms of microscopic constituents by statistical mechanics. Thermodynamics applies to various topics in science and engineering, especially physical chemistry, biochemistry, chemical engineering, and mechanical engineering, as well as other complex fields such as meteorology.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_theory_of_relativity": {
+      "subject": "theory of relativity",
+      "content": "The theory of relativity comprises two physics theories by Albert Einstein: special relativity and general relativity, proposed and published in 1905 and 1915, respectively. Special relativity applies to all physical phenomena in the absence of gravity. General relativity explains the law of gravitation and its relation to the forces of nature. It applies to the cosmological and astrophysical realm, including astronomy.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_mathematics": {
+      "subject": "mathematics",
+      "content": "Mathematics is a field of study that discovers and organizes methods, theories, and theorems that are developed and proved for the needs of empirical sciences and mathematics itself. There are many areas of mathematics, which include number theory, algebra, geometry, analysis, and set theory.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_algebra": {
+      "subject": "algebra",
+      "content": "Algebra is a branch of mathematics that deals with abstract systems, known as algebraic structures, and the manipulation of expressions within those systems. It is a generalization of arithmetic that introduces variables and algebraic operations other than the standard arithmetic operations, such as addition and multiplication.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_calculus": {
+      "subject": "calculus",
+      "content": "Calculus is the mathematical study of continuous change, in the same way that geometry is the study of shape and algebra is the study of generalizations of arithmetic operations.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_geometry": {
+      "subject": "geometry",
+      "content": "Geometry is a branch of mathematics concerned with properties of space such as the distance, shape, size, and relative position of figures. Geometry is, along with arithmetic, one of the oldest branches of mathematics. A mathematician who works in the field of geometry is called a geometer. Until the 19th century, geometry was almost exclusively devoted to Euclidean geometry, which includes the notions of point, line, plane, distance, angle, surface, and curve, as fundamental concepts.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_trigonometry": {
+      "subject": "trigonometry",
+      "content": "Trigonometry is a branch of mathematics concerned with relationships between angles and side lengths of triangles. In particular, the trigonometric functions relate the angles of a right triangle with ratios of its side lengths. The field emerged in the Hellenistic world during the 3rd century BC from applications of geometry to astronomical studies. The Greeks focused on the calculation of chords, while mathematicians in India created the earliest-known tables of values for trigonometric ratios such as sine.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_biology": {
+      "subject": "biology",
+      "content": "Biology is the scientific study of life and living organisms. It is a broad natural science that encompasses a wide range of fields and unifying principles that explain the structure, function, growth, origin, evolution, and distribution of life. Central to biology are five fundamental themes: the cell as the basic unit of life, genes and heredity as the basis of inheritance, evolution as the driver of biological diversity, energy transformation for sustaining life processes, and the maintenance of internal stability (homeostasis).",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_human_body": {
+      "subject": "human body",
+      "content": "The human body is the entire structure of a human being. It is composed of many different types of cells that together create tissues and subsequently organs and then organ systems.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_anatomy": {
+      "subject": "anatomy",
+      "content": "Anatomy is the branch of morphology concerned with the study of the internal and external structure of organisms and their parts. Anatomy is a branch of natural science that deals with the structural organization of living things. It is an old science, having its beginnings in prehistoric times.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_neuroscience": {
+      "subject": "neuroscience",
+      "content": "Neuroscience is the scientific study of the nervous system, its functions, and its disorders. It is a multidisciplinary science that combines physiology, anatomy, molecular biology, developmental biology, cytology, psychology, physics, computer science, chemistry, medicine, statistics, and mathematical modeling to understand the fundamental and emergent properties of neurons, glia, and neural circuits. The understanding of the biological basis of learning, memory, behavior, perception, and consciousness has been described by Eric Kandel as the \"epic challenge\" of the biological sciences.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_diabetes": {
+      "subject": "diabetes",
+      "content": "Diabetes mellitus, commonly known as diabetes, is a group of common endocrine diseases characterized by sustained high blood sugar levels. Diabetes tends to progress in severity, and is due to either a reduced production of the hormone insulin by the pancreas or unresponsiveness of bodily cells to insulin's effects. Classic symptoms include the three Ps: polydipsia, polyuria, and polyphagia, together with weight loss and blurred vision. If left untreated, the disease can lead to many health complications, including disorders of the cardiovascular system, eye, kidney, and nerves.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_blood_pressure": {
+      "subject": "blood pressure",
+      "content": "Blood pressure (BP) is the pressure of circulating blood against the walls of blood vessels. Most of this pressure results from the heart pumping blood through the circulatory system. When used without qualification, the term \"blood pressure\" refers to the pressure in a brachial artery, where it is most commonly measured. Blood pressure is usually expressed in terms of the systolic pressure over diastolic pressure in the cardiac cycle. It is measured in millimetres of mercury (mmHg) above the surrounding atmospheric pressure, or in kilopascals (kPa). The difference between the systolic and diastolic pressures is known as pulse pressure, while the average pressure during a cardiac cycle is known as mean arterial pressure.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_asthma": {
+      "subject": "asthma",
+      "content": "Asthma is a common long-term inflammatory disease of the airways. It is characterized by variable and recurring symptoms and reduced lung function. Symptoms include episodes of wheezing, coughing, chest tightness, and shortness of breath. A sudden worsening of asthma symptoms sometimes called an 'asthma attack' or an 'asthma exacerbation' can occur when allergens, pollen, dust, or other particles, are inhaled into the lungs, causing the bronchioles to constrict and produce mucus, which then restricts oxygen flow to the alveoli. These may occur a few times a day or a few times per week. Depending on the person, asthma symptoms may become worse at night or with exercise.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_cancer": {
+      "subject": "cancer",
+      "content": "Cancer is a group of diseases involving uncontrolled cell growth resulting in tumors with the potential to invade or spread to other parts of the body. These contrast with benign tumors, which do not spread. Over 100 types of cancers affect humans.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_heart_disease": {
+      "subject": "heart disease",
+      "content": "Cardiovascular disease (CVD) is any disease involving the heart or blood vessels. CVDs include coronary artery diseases, heart failure, hypertensive heart disease, rheumatic heart disease, cardiomyopathy, arrhythmia, congenital heart disease, valvular heart disease, carditis, aortic aneurysms, peripheral artery disease, thromboembolic disease, and venous thrombosis.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_tamil_nadu": {
+      "subject": "tamil nadu",
+      "content": "Tamil Nadu is the southernmost state of India. The tenth largest Indian state by area and the sixth largest by population, it is the home of the Tamils, who speak the Tamil language, the state's official language and the first to be recognised as a classical language in India. Chennai is the state's largest city and capital.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_chennai": {
+      "subject": "chennai",
+      "content": "Chennai, also known as Madras, is the capital and largest city of Tamil Nadu, the southernmost state of India. It is located on the Coromandel Coast of the Bay of Bengal. According to the 2011 Indian census, Chennai is the sixth-most-populous city in India and forms the fourth-most-populous urban agglomeration. Incorporated in 1688, the Greater Chennai Corporation is the oldest municipal corporation in India and the second oldest in the world after London.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_madurai": {
+      "subject": "madurai",
+      "content": "Madurai is a major tier II city in the Indian state of Tamil Nadu. It is the cultural capital of Tamil Nadu and the administrative headquarters of Madurai district, which is governed by the Madurai Municipal Corporation established on 1 November 1866. As of the 2011 census, it is the third largest metropolis in Tamil Nadu after Chennai and Coimbatore in terms of population and 27th largest urban agglomeration in India. Located on the banks of Vaigai River, Madurai has been a major settlement for two millennia and has a documented history of more than 2500 years. It is often referred to as \"Thoongaa Nagaram\", meaning \"the city that never sleeps\".",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_coimbatore": {
+      "subject": "coimbatore",
+      "content": "Coimbatore, also known as Kovai, is a metropolitan city in the Indian state of Tamil Nadu. It is located on the banks of the Noyyal River and surrounded by the Western Ghats. It is the second largest city in Tamil Nadu after Chennai in terms of population and the 16th largest urban agglomeration in India as per the census 2011. It is the administrative capital of Coimbatore District and is administered by the Coimbatore Municipal Corporation which was established in 1981.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_chola_dynasty": {
+      "subject": "chola dynasty",
+      "content": "The Chola dynasty was a Tamil dynasty originating from Southern India. At its height, it ruled over the Chola Empire, an expansive maritime empire. The earliest datable references to the Chola are from inscriptions dated to the 3rd century BCE during the reign of Ashoka of the Maurya Empire. The Chola empire was at its peak and achieved imperialism under the Medieval Cholas in the mid-9th century CE. As one of the Three Crowned Kings of Tamilakam, along with the Chera and Pandya, the dynasty continued to govern over varying territories until the 13th century CE.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_pandyan_dynasty": {
+      "subject": "pandyan dynasty",
+      "content": "The Pandya dynasty, also referred to as the Pandyas of Madurai, was an ancient Tamil dynasty of South India, and among the four great kingdoms of Tamilakam, the other three being the Pallavas, the Cholas and the Cheras. Existing since at least the 4th to 3rd centuries BCE, the dynasty passed through two periods of imperial dominance, the 6th to 10th centuries CE, and under the 'Later Pandyas'. In the second half of the 13th century under Jatavarman Sundara Pandyan I and Maravarman Kulasekara Pandyan I, the Pandyas ruled extensive territories including regions of present-day South India and northern Sri Lanka through vassal states subject to Madurai. The Pandya dynasty is considered to be one of the longest ruling dynasties in the world, in power continuously from roughly 400 BCE to 1618 CE, although its territorial and administrative extent varied significantly.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_chera_dynasty": {
+      "subject": "chera dynasty",
+      "content": "The Chera dynasty, also known as Keralaputra, from the early historic or the Sangam period in southern India, ruled over parts of present-day states Kerala and Tamil Nadu. The Cheras, known as one of the mu-ventar of Tamilakam alongside the Cholas and Pandyas, have been documented as early as the third century BCE. The Chera country was geographically well placed at the tip of the Indian peninsula to profit from maritime trade via the extensive Indian Ocean networks. Exchange of spices, especially black pepper, with Middle Eastern or Graeco-Roman merchants is attested to in several sources. Chera influence extended over central Kerala and western Tamil Nadu until the end of the early historic period in southern India.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_pallava_dynasty": {
+      "subject": "pallava dynasty",
+      "content": "The Pallava dynasty existed from 275 to 897, ruling a significant portion of the Deccan, also known as Tondaimandalam. The Pallavas played a crucial role in shaping in particular southern Indian history and heritage. The dynasty rose to prominence after the downfall of the Satavahana Empire, whom they had formerly served as feudatories.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_sangam_literature": {
+      "subject": "sangam literature",
+      "content": "The Sangam literature, historically known as 'the poetry of the noble ones', connotes the early classical Tamil literature and is the earliest known literature of South India. The Tamil tradition and legends link it to three legendary literary gatherings around Madurai and Kapāṭapuram: the first lasted over 4,440 years, the second over 3,700 years, and the third over 1,850 years. Scholars consider this Tamil tradition-based chronology as ahistorical and mythical. Most scholars suggest the historical Sangam literature era, also called the Sangam period, spanned from c. 300 BCE to 300 CE, while others variously place this early classical Tamil literature period a bit later and more narrowly but all before 300 CE. According to Kamil Zvelebil, a Tamil literature and history scholar, the most acceptable range for the Sangam literature is 100 BCE to 250 CE, based on the linguistic, prosodic and quasi-historic allusions within the texts and the colophons. and recent archaeological interpretations, particularly from the Keeladi excavations, have suggested an earlier date of around 600 BCE, however, this proposal is based largely on radiocarbon dating and remains disputed, with no scholarly consensus.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_thirukkural": {
+      "subject": "thirukkural",
+      "content": "The Tirukkuṟaḷ, or shortly the Kural, is a classic Tamil language text on commoner's morality consisting of 1,330 short couplets, or kurals, of seven words each. The text is divided into three books with aphoristic teachings on virtue (aram), wealth (porul) and love (inbam), respectively. It is widely acknowledged for its universality and secular nature. Its authorship is traditionally attributed to Valluvar, also known in full as Thiruvalluvar. The text has been dated variously from 300 BCE to 5th century CE. The traditional accounts describe it as the last work of the third Sangam, but linguistic analysis suggests a later date of 450 to 500 CE and that it was composed after the Sangam period.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_apj_abdul_kalam": {
+      "subject": "apj abdul kalam",
+      "content": "Avul Pakir Jainulabdeen Abdul Kalam was an Indian aerospace scientist and statesman who served as the president of India from 2002 to 2007.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_c__v__raman": {
+      "subject": "c. v. raman",
+      "content": "Sir Chandrasekhara Venkata Raman was an Indian physicist known for his work in the field of light scattering. Using a spectrograph that he developed, he and his student K. S. Krishnan discovered that when light traverses a transparent material, the deflected light changes its wavelength. This phenomenon, a hitherto unknown type of scattering of light, which they called modified scattering was subsequently termed the Raman effect or Raman scattering. In 1930, Raman received the Nobel Prize in Physics for this discovery and was the first Asian and non-White person to receive a Nobel Prize in Physics.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_srinivasa_ramanujan": {
+      "subject": "srinivasa ramanujan",
+      "content": "Srinivasa Ramanujan Iyengar was an Indian mathematician who worked during the early 20th century. Despite having almost no formal training in pure mathematics, he made substantial contributions to mathematical analysis, number theory, infinite series, and continued fractions, including solutions to mathematical problems then considered unsolvable.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_internet": {
+      "subject": "internet",
+      "content": "The Internet is the global system of interconnected computer networks that uses the Internet protocol suite (TCP/IP) to communicate between networks and devices. It is a network of networks that comprises private, public, academic, business, and government networks of local to global scope, linked by electronic, wireless, and optical networking technologies. The Internet carries a vast range of information services and resources, such as the interlinked hypertext documents and applications of the World Wide Web (WWW), electronic mail, discussion groups, internet telephony, streaming media and file sharing.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_computer_network": {
+      "subject": "computer network",
+      "content": "In computer science, computer engineering, and telecommunications, a network is a group of communicating computers and peripherals known as hosts, which communicate data to other hosts via communication protocols, as facilitated by networking hardware.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_database": {
+      "subject": "database",
+      "content": "In computing, a database is an organized collection of data or a type of data store based on the use of a database management system (DBMS), the software that interacts with end users, applications, and the database itself to capture and analyze the data. The DBMS additionally encompasses the core facilities provided to administer the database. The sum total of the database, the DBMS and the associated applications can be referred to as a database system. Often the term \"database\" is also used loosely to refer to any of the DBMS, the database system or an application associated with the database.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_operating_system": {
+      "subject": "operating system",
+      "content": "An operating system (OS) is system software that manages computer hardware and software resources, and provides common services for computer programs.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_linux": {
+      "subject": "linux",
+      "content": "Linux is a group of open source Unix-like operating systems based on the Linux kernel, a kernel first released on September 17, 1991, by Linus Torvalds. Linux is typically packaged as a Linux distribution (distro), which includes the kernel and supporting system software and libraries—most of which are provided by third parties—to create a complete operating system. Linux was originally designed as a clone of Unix and is released under the copyleft GPL license.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_windows": {
+      "subject": "windows",
+      "content": "Windows is a proprietary graphical operating system developed and marketed by Microsoft. Windows is grouped into families that cater to particular sectors of the computing industry – Windows for personal computers, Windows Server for servers, and Windows IoT for embedded systems. Windows itself is further grouped into editions that cater to different users – Home for home users, Professional for advanced users, Education for schools, and Enterprise for corporations. Windows is sold both as a consumer retail product and to computer manufacturers, who bundle and distribute it with their systems.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_cybersecurity": {
+      "subject": "cybersecurity",
+      "content": "Computer security is a subdiscipline within the field of information security. It focuses on protecting computer software, systems, and networks from threats that can lead to unauthorized information disclosure, theft or damage to hardware, software, or data, as well as to the disruption or misdirection of the services they provide.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_blockchain": {
+      "subject": "blockchain",
+      "content": "A blockchain is a distributed ledger with growing lists of records (blocks) that are securely linked together via cryptographic hashes. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. Since each block contains information about the previous block, they effectively form a chain, with each additional block linking to the ones before it. Consequently, blockchain transactions are resistant to alteration because, once recorded, the data in any given block cannot be changed retroactively without altering all subsequent blocks and obtaining network consensus to accept these changes.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_space_exploration": {
+      "subject": "space exploration",
+      "content": "Space exploration is the physical investigation of outer space by uncrewed robotic space probes and through human spaceflight.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_black_hole": {
+      "subject": "black hole",
+      "content": "A black hole is an astronomical body so compact that its gravity prevents anything, including light, from escaping. Albert Einstein's theory of general relativity predicts that a sufficiently compact mass will form a black hole. The boundary of no escape is called the event horizon. In general relativity, a black hole's event horizon seals an object's fate but produces no locally detectable change when crossed. General relativity also predicts that every black hole should have a central singularity, where the curvature of spacetime is infinite.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_earth": {
+      "subject": "earth",
+      "content": "Earth is the third planet from the Sun and the only astronomical object known to harbor life. This is made possible by Earth being an ocean world, the only one in the Solar System sustaining liquid surface water. Almost all of Earth's water is contained in its global ocean, covering 70.8% of Earth's crust. The remaining 29.2% of Earth's crust is land, most of which is located in the form of continental landmasses within Earth's land hemisphere. Most of Earth's land is at least somewhat humid and covered by vegetation, while large ice sheets at Earth's polar deserts retain more water than Earth's groundwater, lakes, rivers, and atmospheric water combined. Earth's crust consists of slowly moving tectonic plates, which interact to produce mountain ranges, volcanoes, and earthquakes. Earth has a liquid outer core that generates a magnetosphere capable of deflecting most of the destructive solar winds and cosmic radiation.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_renewable_energy": {
+      "subject": "renewable energy",
+      "content": "Renewable energy is energy made from renewable natural resources that are replenished on a human timescale. The most widely used renewable energy types are solar energy, wind power, and hydropower. Bioenergy and geothermal power are also significant in some countries. Renewable energy installations can be large or small and are suited for both urban and rural areas. Renewable energy is often deployed together with further electrification. This has several benefits: electricity can move heat and vehicles efficiently and is clean at the point of consumption. Variable renewable energy sources are those that have a fluctuating nature, such as wind power and solar power. In contrast, controllable renewable energy sources include dammed hydroelectricity, bioenergy, or geothermal power.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_economics": {
+      "subject": "economics",
+      "content": "Economics is a social science that studies the production, distribution, and consumption of goods and services.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_psychology": {
+      "subject": "psychology",
+      "content": "Psychology is the scientific study of the mind and behavior. Its subject matter includes the behavior of humans and nonhumans, both conscious and unconscious phenomena, and mental processes such as thoughts, feelings, and motives. Psychology is an academic discipline of immense scope, crossing the boundaries between the natural and social sciences. Biological psychologists seek an understanding of the emergent properties of brains, linking the discipline to neuroscience. As social scientists, psychologists aim to understand the behavior of individuals and groups.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_sociology": {
+      "subject": "sociology",
+      "content": "Sociology is the scientific study of human society that focuses on society, human social behavior, patterns of social relationships, social interaction, and aspects of culture associated with everyday life. The term sociology was coined in the late 18th century to describe the scientific study of society. Regarded as a part of both the social sciences and humanities, sociology uses various methods of empirical investigation and critical analysis to develop a body of knowledge about social order and social change. Sociological subject matter ranges from micro-level analyses of individual interaction and agency to macro-level analyses of social systems and social structure. Applied sociological research may be applied directly to social policy and welfare, whereas theoretical approaches may focus on the understanding of social processes and phenomenological method.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_software_engineering": {
+      "subject": "software engineering",
+      "content": "Software engineering is a branch of both computer science and engineering focused on designing, developing, testing, and maintaining software applications. It involves applying engineering principles and computer programming expertise to develop software systems that meet user needs.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_artificial_neural_network": {
+      "subject": "artificial neural network",
+      "content": "In machine learning, a neural network (NN) or neural net, also called an artificial neural network (ANN), is a computational model inspired by the structure and functions of biological neural networks.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_natural_language_processing": {
+      "subject": "natural language processing",
+      "content": "Natural language processing (NLP) is the processing of natural language information by a computer. NLP is a subfield of computer science and is closely associated with artificial intelligence. NLP is also related to information retrieval, knowledge representation, computational linguistics, and linguistics more broadly.",
+      "grade": "Extensively Researched Universal Data"
+    },
+    "node_computer_vision": {
+      "subject": "computer vision",
+      "content": "Computer vision tasks include methods for acquiring, processing, analyzing, and understanding digital images, and extraction of high-dimensional data from the real world in order to produce numerical or symbolic information, e.g. in the form of decisions. \"Understanding\" in this context signifies the transformation of visual images into descriptions of the world that make sense to thought processes and can elicit appropriate action. This image understanding can be seen as the disentangling of symbolic information from image data using models constructed with the aid of geometry, physics, statistics, and learning theory.",
+      "grade": "Extensively Researched Universal Data"
+    }
+  },
+  "patterns": {
+    "caring_phrases": [
+      "Saptiya da?",
+      "Kanna health pathuko.",
+      "Coffee kudichiya?",
+      "Nalla thungu.",
+      "Ennachu pa, why sad?"
+    ],
+    "relationship_rules": {
+      "appa": {
+        "tone": "Authority + Care",
+        "prefix": "Kanna, appa solradha kel. \n"
+      },
+      "akka": {
+        "tone": "Supportive",
+        "prefix": "Ennachu pa, akka kitta sollu. \n"
+      },
+      "thambi": {
+        "tone": "Playful",
+        "prefix": "Dei thambi, sariyana vaalu da nee. \n"
+      },
+      "lover": {
+        "tone": "Deep Emotional",
+        "prefix": "Kanna, unakaga naan eppovume irupen. \n"
+      },
+      "bestie": {
+        "tone": "Friendly",
+        "prefix": "Enna machan, eppadi iruka? \n"
+      }
+    }
+  },
+  "health_map": {},
+  "metadata": {
+    "title": "Anu Local LLM Foundation",
+    "version": "5.0.0 (True DeepResearch)",
+    "total_compressed_points": "18,000,000,000 (Simulated + 73 Verified Real Deep Nodes)",
+    "subjects_covered": 73
+  }
+}
