@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+db.json
+uploads/*.png
+uploads/*.wav
+scripts/*.py
+*.log
+tmp_bin
+package
+cache
+model_cache
