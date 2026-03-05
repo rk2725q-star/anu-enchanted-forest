@@ -1,0 +1,5 @@
+{
+  "name": "Anu - Enchanted Forest AI",
+  "description": "A WhatsApp-style AI companion with a Tamil-focused persona, featuring voice chat, file sharing, and immersive live calls in an enchanted forest theme.",
+  "requestFramePermissions": ["microphone"]
+}
