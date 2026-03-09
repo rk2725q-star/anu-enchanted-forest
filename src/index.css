@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono&display=swap');
 @import "tailwindcss";
 
-@theme {
+/* Theme Variables */
+:root {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Cormorant Garamond", serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -13,13 +14,14 @@
   --color-glow: #00ff88;
 }
 
-@layer base {
-  body {
-    @apply bg-forest-dark text-white font-sans overflow-hidden;
-    background-image: url('https://picsum.photos/seed/forest/1920/1080?blur=5');
-    background-size: cover;
-    background-position: center;
-  }
+body {
+  background-color: var(--color-forest-dark);
+  color: white;
+  font-family: var(--font-sans);
+  overflow: hidden;
+  background-image: url('https://picsum.photos/seed/forest/1920/1080?blur=5');
+  background-size: cover;
+  background-position: center;
 }
 
 .wood-panel {
@@ -46,17 +48,23 @@
 }
 
 .message-bubble {
-  @apply max-w-[80%] p-3 rounded-2xl mb-4 relative;
+  max-width: 80%;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
 .user-bubble {
-  @apply self-end rounded-tr-none;
+  align-self: flex-end;
+  border-top-right-radius: 0;
   background: linear-gradient(to bottom, #4a3728, #2d1e14);
   border: 1px solid #5c4033;
 }
 
 .model-bubble {
-  @apply self-start rounded-tl-none;
+  align-self: flex-start;
+  border-top-left-radius: 0;
   background: linear-gradient(to bottom, #2d3e2d, #1a261a);
   border: 1px solid #3d4d3d;
 }
@@ -69,21 +77,29 @@
 .prose h1,
 .prose h2,
 .prose h3 {
-  @apply font-serif text-glow mb-4 mt-8 block;
+  font-family: var(--font-serif);
+  color: var(--color-glow);
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  display: block;
   font-weight: 700 !important;
 }
 
 .prose p {
-  @apply mb-6 leading-relaxed block;
+  margin-bottom: 1.5rem;
+  line-height: 1.625;
+  display: block;
 }
 
 .prose ul,
 .prose ol {
-  @apply mb-6 ml-4 block;
+  margin-bottom: 1.5rem;
+  margin-left: 1rem;
+  display: block;
 }
 
 .prose li {
-  @apply mb-4;
+  margin-bottom: 1rem;
 }
 
 /* Force 1cm-like gap between points */
@@ -98,6 +114,6 @@
 
 @media (max-width: 640px) {
   .message-bubble {
-    @apply max-w-[90%];
+    max-width: 90%;
   }
 }
