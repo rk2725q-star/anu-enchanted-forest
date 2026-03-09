@@ -9,12 +9,35 @@ import { generateLocalImage } from "../src/services/imageGenService";
 const isVercel = process.env.VERCEL === "1";
 const DB_PATH = isVercel ? path.join("/tmp", "db.json") : path.join(process.cwd(), "db.json");
 
-if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify({ messages: [], memories: [] }, null, 2));
-}
+const initDb = () => {
+    try {
+        if (!fs.existsSync(DB_PATH)) {
+            fs.writeFileSync(DB_PATH, JSON.stringify({ messages: [], memories: [] }, null, 2));
+        }
+    } catch (e) {
+        console.error("DB Init Error:", e);
+    }
+};
 
-const getDb = () => JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
-const saveDb = (data: any) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+initDb();
+
+const getDb = () => {
+    try {
+        if (!fs.existsSync(DB_PATH)) return { messages: [], memories: [] };
+        return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+    } catch (e) {
+        console.error("getDb Error:", e);
+        return { messages: [], memories: [] };
+    }
+};
+
+const saveDb = (data: any) => {
+    try {
+        fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+    } catch (e) {
+        console.error("saveDb Error:", e);
+    }
+};
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyBM_RiMAzICwYrzQZZ8EVFkgXue_oelZTE");
 
@@ -94,11 +117,17 @@ app.post("/api/chat", async (req, res) => {
         }
 
         if (parsedResponse.image_prompt && parsedResponse.image_prompt !== "NONE") {
-            try {
-                const { url } = await generateLocalImage(parsedResponse.image_prompt);
-                parsedResponse.image_url = url;
-            } catch (e) {
-                parsedResponse.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(parsedResponse.image_prompt)}?width=800&height=600&nologo=true`;
+            const prompt = parsedResponse.image_prompt;
+            // Vercel Strategy: Return Pollinations URL immediately for speed
+            if (isVercel) {
+                parsedResponse.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
+            } else {
+                try {
+                    const { url } = await generateLocalImage(prompt);
+                    parsedResponse.image_url = url;
+                } catch (e) {
+                    parsedResponse.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
+                }
             }
         }
 
@@ -120,11 +149,16 @@ app.post("/api/chat/local", async (req, res) => {
         const aiData = await queryAnuOwnModel(message, memories || []);
 
         if (aiData.image_prompt && aiData.image_prompt !== "NONE") {
-            try {
-                const { url } = await generateLocalImage(aiData.image_prompt);
-                aiData.image_url = url;
-            } catch (e) {
-                aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(aiData.image_prompt)}?width=800&height=600&nologo=true`;
+            const prompt = aiData.image_prompt;
+            if (isVercel) {
+                aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
+            } else {
+                try {
+                    const { url } = await generateLocalImage(prompt);
+                    aiData.image_url = url;
+                } catch (e) {
+                    aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
+                }
             }
         }
         res.json(aiData);
@@ -136,11 +170,14 @@ app.post("/api/chat/local", async (req, res) => {
 app.post("/api/generate-image", async (req, res) => {
     const { prompt, style } = req.body;
     const finalPrompt = style ? `${prompt}, ${style} style` : prompt;
+    if (isVercel) {
+        return res.json({ url: `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=800&height=800&seed=${Date.now()}&nologo=true` });
+    }
     try {
         const { url } = await generateLocalImage(finalPrompt);
         res.json({ url });
     } catch (e) {
-        res.json({ url: `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=800&height=800&nologo=true` });
+        res.json({ url: `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=800&height=800&seed=${Date.now()}&nologo=true` });
     }
 });
 
