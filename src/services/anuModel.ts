@@ -20,9 +20,29 @@ class AnuBrain {
     private dataPath: string;
 
     constructor() {
-        this.dataPath = path.join(process.cwd(), 'anu_llm_foundation.json');
+        // Try multiple paths to find the foundation file (Vercel vs Local)
+        const possiblePaths = [
+            path.join(process.cwd(), 'anu_llm_foundation.json'),
+            path.join(__dirname, '..', '..', 'anu_llm_foundation.json'),
+            path.join(__dirname, '..', 'anu_llm_foundation.json'),
+            path.join(process.cwd(), 'public', 'anu_llm_foundation.json')
+        ];
+
+        for (const p of possiblePaths) {
+            if (fs.existsSync(p)) {
+                this.dataPath = p;
+                break;
+            }
+        }
+
+        if (!this.dataPath) this.dataPath = possiblePaths[0];
+
         try {
-            this.foundation = JSON.parse(fs.readFileSync(this.dataPath, 'utf-8'));
+            if (fs.existsSync(this.dataPath)) {
+                this.foundation = JSON.parse(fs.readFileSync(this.dataPath, 'utf-8'));
+            } else {
+                this.foundation = { knowledge: {}, patterns: {} };
+            }
         } catch (e) {
             console.error("Anu Brain Load Error:", e);
             this.foundation = { knowledge: {}, patterns: {} };
