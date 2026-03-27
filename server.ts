@@ -79,6 +79,14 @@ async function startServer() {
     res.json(newMsg);
   });
 
+  app.post("/api/messages/ai", (req, res) => {
+    const db = getDb();
+    const newMsg = { id: Date.now(), role: 'model', ...req.body, timestamp: new Date().toISOString() };
+    db.messages.push(newMsg);
+    saveDb(db);
+    res.json(newMsg);
+  });
+
   app.post("/api/chat", async (req, res) => {
     try {
       const { message, history, memories: clientMemories, settings } = req.body;
