@@ -19,7 +19,7 @@ body {
   color: white;
   font-family: var(--font-sans);
   overflow: hidden;
-  background-image: url('https://picsum.photos/seed/forest/1920/1080?blur=5');
+  background-image: url('/forest-bg.png');
   background-size: cover;
   background-position: center;
 }
