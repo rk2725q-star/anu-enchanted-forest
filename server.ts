@@ -134,14 +134,22 @@ async function startServer() {
       const callNvidia = async (key: string, modelName: string) => {
           const resp = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key.trim()}` },
+              headers: { 
+                  'Content-Type': 'application/json', 
+                  'Authorization': `Bearer ${key.trim()}`,
+                  'Accept': 'application/json'
+              },
               body: JSON.stringify({
                   model: modelName || 'nvidia/llama-3.1-405b-instruct',
                   messages: [{ role: 'system', content: systemInstruction }, ...history.map((m: any) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content })), { role: 'user', content: message }],
+                  temperature: 0.5,
+                  top_p: 1,
+                  max_tokens: 1024,
                   stream: false
               })
           });
           const data = await resp.json();
+          if (!resp.ok) throw new Error(data.detail || data.message || `Nvidia error ${resp.status}`);
           return data.choices[0].message.content;
       };
 
@@ -188,9 +196,20 @@ async function startServer() {
               const d = await r.json();
               models = d.models?.filter((m: any) => m.supportedGenerationMethods.includes('generateContent')).map((m: any) => m.name.replace('models/', '')) || [];
           } else if (provider === 'nvidia') {
-              const r = await fetch('https://integrate.api.nvidia.com/v1/models', { headers: { 'Authorization': `Bearer ${k}` } });
+              const r = await fetch('https://integrate.api.nvidia.com/v1/models', { 
+                  headers: { 
+                      'Authorization': `Bearer ${k}`,
+                      'Accept': 'application/json'
+                  } 
+              });
               const d = await r.json();
               models = d.data?.map((m: any) => m.id) || [];
+          } else if (provider === 'ollama') {
+              const r = await fetch('https://ollama.com/api/tags', {
+                  headers: { 'Authorization': `Bearer ${k}`, 'Accept': 'application/json' }
+              });
+              const d = await r.json();
+              models = d.models?.map((m: any) => m.name) || [];
           }
           res.json({ models });
       } catch (e) { res.json({ models: [] }); }
