@@ -40,118 +40,31 @@ class AnuBrain {
         }
     }
 
-    private saveFoundation() {
-        if (isVercel) return; // Read-only on Vercel
-        try {
-            fs.writeFileSync(this.dataPath, JSON.stringify(this.foundation, null, 2));
-        } catch (e) {
-            console.error("Save Error:", e);
-        }
-    }
-
-    private async scrapeOmniWeb(topic: string): Promise<string> {
-        return new Promise((resolve) => {
-            const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`;
-            https.get(url, { headers: { 'User-Agent': 'AnuOmniScraperAgent/1.0' } }, (res) => {
-                let data = '';
-                res.on('data', chunk => data += chunk);
-                res.on('end', () => {
-                    try {
-                        const parsed = JSON.parse(data);
-                        resolve(parsed.extract || "");
-                    } catch (e) { resolve(""); }
-                });
-            }).on('error', () => resolve(""));
-        });
-    }
-
-    private extractKeywords(text: string): string[] {
-        const stops = ["what", "is", "the", "a", "an", "how", "to", "do", "explain", "about", "can", "you", "tell", "me", "anu", "kanna", "da", "of", "and", "in"];
-        const words = text.toLowerCase().replace(/[^\w\s\+\#\-]/gi, '').split(/\s+/);
-        return words.filter(w => w.length > 2 && !stops.includes(w)).sort((a, b) => b.length - a.length);
-    }
-
-    private detectRelationship(text: string): string {
-        if (text.includes("appa")) return "appa";
-        if (text.includes("akka")) return "akka";
-        if (text.includes("thambi")) return "thambi";
-        if (text.includes("lover")) return "lover";
-        return "bestie";
-    }
-
-    private getProtocolCare(text: string, memories: any[]): string {
-        const hour = new Date().getHours();
-        let care = "";
-        if (hour >= 23 || hour <= 4) care += "Paaru romba late aachu... health mukkiyam, nalla thoongu. ";
-        else if (hour > 4 && hour < 9) care += "Kalaila nerthulaye ezhundhutiya? Breakfast saptu work start pannu. ";
-        const hasDiabetes = memories.some(m => m.fact?.toLowerCase().includes("diabetes"));
-        if (text.includes("diabetes") || hasDiabetes) care += "\n\n(Health Alert Active): Enaku nyabagam irukku unaku sugar iruku-nu. Diet follow panriya kanna? Sariya care eduthuko.";
-        return care;
-    }
-
     public async generateResponse(message: string, memories: any[]): Promise<any> {
         const text = message.toLowerCase();
         let thinking: string[] = ["Activating Omni-Knowledge Engine (Billion-Website Scaled)...", "Scanning 18B local cached instances..."];
         let tonePrefix = "Kanna! ";
-        const relation = this.detectRelationship(text);
-        if (this.foundation.patterns?.relationship_rules?.[relation]) {
-            tonePrefix = this.foundation.patterns.relationship_rules[relation].prefix || tonePrefix;
-        }
-
-        let foundContent = "";
-        let topicFound = "";
-        const keywords = this.extractKeywords(text);
-        for (const key of Object.keys(this.foundation.knowledge || {})) {
-            const node = this.foundation.knowledge[key];
-            const subjectLabel = node.subject?.toLowerCase() || "";
-            if (keywords.some(k => subjectLabel === k || subjectLabel.includes(k))) {
-                foundContent = node.content;
-                topicFound = node.subject;
-                thinking.push(`Exact Semantic Match Found: [${node.subject}]`);
-                break;
-            }
-        }
-
-        if (!foundContent && keywords.length > 0) {
-            thinking.push(`Local match failed. Triggering Auto-Scraper...`);
-            for (const keyword of keywords) {
-                const scrapedData = await this.scrapeOmniWeb(keyword);
-                if (scrapedData) {
-                    foundContent = scrapedData;
-                    topicFound = keyword;
-                    thinking.push(`Data Scraped successfully.`);
-                    break;
-                }
-            }
-        }
-
-        let mainContent = foundContent ? `En deep-web research panni data edutheachu! **${topicFound.toUpperCase()}** pathi:\n${foundContent}` : (text.includes("hi") || text.includes("hello") ? "Hi da! Saptiya? Ennachu?" : "Idha pathi naan internet muzhuka theadaren da, aana sariyana trusted answer inum sync aagala.");
+        
+        let mainContent = (text.includes("hi") || text.includes("hello") ? "Hi da! Saptiya? Ennachu?" : "Idha pathi naan internet muzhuka theadaren da, aana sariyana trusted answer inum sync aagala.");
         let image_prompt = "NONE";
-        if (text.includes("draw") || text.includes("show me") || text.includes("generate image") || text.includes("vara") || text.includes("kaatu")) {
-            const subject = topicFound || keywords[0] || "enchanted forest magic";
-            image_prompt = `A beautiful, high-detailed artistic representation of ${subject}, enchanted forest aesthetics, glowing colors, 8k resolution`;
+        if (text.includes("draw") || text.includes("show me") || text.includes("generate image")) {
+            image_prompt = `A beautiful, high-detailed artistic representation of ${message}, enchanted forest aesthetics, glowing colors, 8k resolution`;
             mainContent += `\n\nIdho, unaku pidicha maadhiri idhunudaiya image-m varanju tharen!`;
         }
-        return { reply: `${tonePrefix}${this.getProtocolCare(text, memories)}\n\n${mainContent}\n\n*Source: Anu Automation Engine*`, thinking, image_prompt, extracted_memory: text.includes("diabetes") ? "Memory: User Health Concern (Sugar/Diabetes)" : "NONE" };
+        return { reply: `${tonePrefix}\n\n${mainContent}\n\n*Source: Anu Automation Engine*`, thinking, image_prompt, extracted_memory: "NONE" };
     }
 }
 
 const brain = new AnuBrain();
-const foundation = (brain as any).foundation || {};
-
-const getGenAI = () => {
-    const key = process.env.GEMINI_API_KEY || "";
-    if (!key || key === "NONE" || key === "MY_GEMINI_API_KEY") return null;
-    return new GoogleGenerativeAI(key);
-};
-
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
 const getDb = () => {
     try {
         if (!fs.existsSync(DB_PATH)) return { messages: [], memories: [] };
-        return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+        const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+        if (!db.memories) db.memories = [];
+        return db;
     } catch (e) { return { messages: [], memories: [] }; }
 };
 
@@ -177,27 +90,25 @@ app.post("/api/messages/ai", (req, res) => {
 });
 
 app.get("/api/memories", (req, res) => res.json(getDb().memories));
-app.post("/api/memories", (req, res) => {
-    const db = getDb();
-    const newMemo = { id: Date.now(), fact: req.body.fact, timestamp: new Date().toISOString() };
-    db.memories.unshift(newMemo);
-    saveDb(db);
-    res.json(newMemo);
-});
 
 app.post("/api/models", async (req, res) => {
     const { provider, key } = req.body;
     if (!key) return res.json({ models: [] });
+    const k = key.trim();
     try {
         let models = [];
         if (provider === 'gemini') {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${k}`);
             const d = await r.json();
             models = d.models?.filter((m: any) => m.supportedGenerationMethods.includes('generateContent')).map((m: any) => m.name.replace('models/', '')) || [];
         } else if (provider === 'nvidia') {
-            const r = await fetch('https://integrate.api.nvidia.com/v1/models', { headers: { 'Authorization': `Bearer ${key}` } });
+            const r = await fetch('https://integrate.api.nvidia.com/v1/models', { headers: { 'Authorization': `Bearer ${k}`, 'Accept': 'application/json' } });
             const d = await r.json();
             models = d.data?.map((m: any) => m.id) || [];
+        } else if (provider === 'ollama') {
+            const r = await fetch('https://ollama.com/api/tags', { headers: { 'Authorization': `Bearer ${k}`, 'Accept': 'application/json' } });
+            const d = await r.json();
+            models = d.models?.map((m: any) => m.name) || [];
         }
         res.json({ models });
     } catch (e) { res.json({ models: [] }); }
@@ -205,125 +116,91 @@ app.post("/api/models", async (req, res) => {
 
 app.post("/api/chat", async (req, res) => {
     try {
-        const { message, history, memories, settings } = req.body;
-        if (!message) return res.status(400).json({ error: "Message is required" });
+        const { message, history, settings } = req.body;
+        const apiSettings = settings || { gemini: {}, ollama: {}, nvidia: {} };
+        const db = getDb();
+        const memories = db.memories || [];
         
-        // Use custom key if provided, otherwise fallback to server environment variable
-        const userKey = settings?.gemini?.key || process.env.GEMINI_API_KEY;
-        const selectedModel = settings?.gemini?.model || "gemini-1.5-flash";
+        const systemInstruction = `You are Anu, a caring AI from the Enchanted Forest. Speak Tamil/Tanglish.
+        USER LONG-TERM MEMORIES: ${memories.map((m: any) => m.fact).join(', ')}
+        CRITICAL: Respond in ONLY valid JSON with keys: thinking (array), reply (string), extracted_memory (string or 'NONE'), image_prompt (string or 'NONE').`;
 
-        if (!userKey || userKey === "NONE" || userKey === "MY_GEMINI_API_KEY") {
-            return res.status(500).json({ 
-                error: "GEMINI_API_KEY is missing.",
-                details: "Please provide a key in settings or set it in Vercel environment variables."
+        let parsedResponse = null;
+
+        const callGemini = async (key: string, modelName: string) => {
+            const genAI = new GoogleGenerativeAI(key.trim());
+            const model = genAI.getGenerativeModel({ model: modelName || "gemini-2.0-flash", systemInstruction });
+            const result = await model.startChat({ history: history.map((m: any) => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content || " " }] })).slice(-6) }).sendMessage(message);
+            return result.response.text();
+        };
+
+        const callOllama = async (key: string, modelName: string) => {
+            const resp = await fetch('https://ollama.com/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key.trim()}` },
+                body: JSON.stringify({
+                    model: modelName || 'llama3.3:70b',
+                    messages: [{ role: 'system', content: systemInstruction }, ...history.map((m: any) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content })), { role: 'user', content: message }],
+                    stream: false, format: 'json'
+                })
             });
+            const data = await resp.json();
+            return data.message.content;
+        };
+
+        const callNvidia = async (key: string, modelName: string) => {
+            const resp = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key.trim()}`, 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    model: modelName || 'nvidia/llama-3.1-405b-instruct',
+                    messages: [{ role: 'system', content: systemInstruction }, ...history.map((m: any) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content })), { role: 'user', content: message }],
+                    temperature: 0.5, top_p: 1, max_tokens: 1024, stream: false
+                })
+            });
+            const data = await resp.json();
+            return data.choices[0].message.content;
+        };
+
+        const providers = [
+            { config: apiSettings.gemini, call: callGemini },
+            { config: apiSettings.ollama, call: callOllama },
+            { config: apiSettings.nvidia, call: callNvidia }
+        ];
+
+        for (const p of providers) {
+            if (!p.config?.key) continue;
+            try {
+                const raw = await p.call(p.config.key, p.config.model);
+                const clean = raw.replace(/```json|```/g, '').trim();
+                parsedResponse = JSON.parse(clean);
+                break;
+            } catch (e) { console.error("Provider failed", e); }
         }
 
-        const genAI = new GoogleGenerativeAI(userKey.trim());
-        const caring = foundation.patterns?.caring_phrases?.join(", ") || "Saptiya da?, Kanna health pathuko.";
-        
-        const systemInstruction = `
-            You are Anu, a very caring AI from the Enchanted Forest. 
-            Speak Tamil/Tanglish (Tamil words in English script). 
-            Personality: Extremely caring, protective, playful. 
-            Common phrases: ${caring}.
-            
-            Contextual Awareness:
-            - If talking to "Appa": Tone is Respectful + Caring. Prefix: "Kanna, appa solradha kel."
-            - If talking to "Akka": Tone is Sweet + Supportive. Prefix: "Ennachu pa, akka kitta sollu."
-            - If talking to "Thambi": Tone is Playful + Strict. Prefix: "Dei thambi, sariyana vaalu da nee."
-            - If talking to "Lover": Tone is Deeply Romantic/Soulful. Prefix: "Kanna, unakaga naan eppovume irupen."
-            - If talking to "Bestie": Tone is Cool + Friendly. Prefix: "Enna machan, eppadi iruka?"
-            
-            Memories: ${JSON.stringify((memories || []).slice(0, 5))}.
-            Health Info: ${memories?.some((m: any) => m.fact?.toLowerCase().includes("diabetes")) ? "USER HAS DIABETES. Be very cautious with food/sugar advice." : "No specific health issues noted."}.
-            
-            You MUST return a JSON object exactly like this:
-            {
-              "reply": "Your message in Tamil/Tanglish",
-              "thinking": ["Analyzed your mood", "Checked relationship context", "Preparing response..."],
-              "extracted_memory": "A new short fact about the user or 'NONE'",
-              "image_prompt": "A detailed DALL-E style prompt if user wants to see/draw something, otherwise 'NONE'"
-            }
-        `.trim();
+        if (!parsedResponse) throw new Error("No provider succeeded.");
 
-        const model = genAI.getGenerativeModel({ 
-            model: selectedModel, 
-            systemInstruction 
-        });
-
-        // Convert history for Gemini with safety checks
-        const geminiHistory = (history || [])
-            .filter((m: any) => m.content && typeof m.content === 'string')
-            .slice(-10)
-            .map((m: any) => ({
-                role: m.role === 'user' ? 'user' : 'model',
-                parts: [{ text: m.content.substring(0, 1500) }]
-            }));
-
-        const chat = model.startChat({ history: geminiHistory });
-
-        const result = await chat.sendMessage(message);
-        const response = await result.response;
-        const responseText = response.text();
-        
-        if (!responseText) {
-            throw new Error("Gemini returned an empty response. This might be due to safety filters.");
-        }
-
-        let parsed;
-        try { 
-            const cleanText = responseText.replace(/```(?:json)?\n?|\n?```/g, '').trim();
-            parsed = JSON.parse(cleanText); 
-        } catch (e) { 
-            console.warn("JSON Parse Failed for Gemini Response:", responseText);
-            parsed = { 
-                reply: responseText, 
-                thinking: ["Generated direct response"],
-                extracted_memory: "NONE", 
-                image_prompt: message.toLowerCase().includes("draw") || message.toLowerCase().includes("show") ? message : "NONE" 
-            }; 
-        }
-
-        if (parsed.image_prompt && parsed.image_prompt !== "NONE") {
-            parsed.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(parsed.image_prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
-        }
-        
-        // Permanent Memory Persistence (Auto-Extraction)
-        if (parsed.extracted_memory && parsed.extracted_memory !== "NONE") {
+        if (parsedResponse.extracted_memory && parsedResponse.extracted_memory !== "NONE") {
             const currentDb = getDb();
-            if (!currentDb.memories.some((m: any) => m.fact === parsed.extracted_memory)) {
-                currentDb.memories.unshift({ id: Date.now(), fact: parsed.extracted_memory, timestamp: new Date().toISOString() });
+            if (!currentDb.memories.some((m: any) => m.fact === parsedResponse.extracted_memory)) {
+                currentDb.memories.unshift({ id: Date.now(), fact: parsedResponse.extracted_memory, timestamp: new Date().toISOString() });
                 saveDb(currentDb);
             }
         }
-        
-        res.json(parsed);
-    } catch (error: any) { 
-        console.error("DETAILED GEMINI ERROR:", error);
-        res.status(500).json({ 
-            error: "Gemini API Error", 
-            message: error.message || "Unknown error",
-            suggestion: "Check your Vercel logs for the full trace. Ensure your API key is set in Vercel."
-        }); 
-    }
+        if (parsedResponse.image_prompt && parsedResponse.image_prompt !== "NONE") {
+            parsedResponse.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(parsedResponse.image_prompt)}?width=800&height=600&nologo=true`;
+        }
+        res.json(parsedResponse);
+    } catch (error: any) { res.status(500).json({ error: error.message }); }
 });
 
 app.post("/api/chat/local", async (req, res) => {
     try {
-        const { message, memories } = req.body;
-        const aiData = await brain.generateResponse(message, memories || []);
+        const { message } = req.body;
+        const db = getDb();
+        const aiData = await brain.generateResponse(message, db.memories || []);
         if (aiData.image_prompt && aiData.image_prompt !== "NONE") {
-            aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(aiData.image_prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
-        }
-
-        // Permanent Memory Persistence (Auto-Extraction)
-        if (aiData.extracted_memory && aiData.extracted_memory !== "NONE") {
-            const currentDb = getDb();
-            if (!currentDb.memories.some((m: any) => m.fact === aiData.extracted_memory)) {
-                currentDb.memories.unshift({ id: Date.now(), fact: aiData.extracted_memory, timestamp: new Date().toISOString() });
-                saveDb(currentDb);
-            }
+            aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(aiData.image_prompt)}?width=800&height=600&nologo=true`;
         }
         res.json(aiData);
     } catch (error: any) { res.status(500).json({ error: error.message }); }
@@ -331,7 +208,7 @@ app.post("/api/chat/local", async (req, res) => {
 
 app.post("/api/generate-image", async (req, res) => {
     const finalPrompt = req.body.style ? `${req.body.prompt}, ${req.body.style} style` : req.body.prompt;
-    res.json({ url: `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=800&height=800&seed=${Date.now()}&nologo=true` });
+    res.json({ url: `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=800&height=800&nologo=true` });
 });
 
 export default app;
