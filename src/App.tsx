@@ -656,7 +656,7 @@ export default function App() {
       <header className="wood-panel h-20 flex items-center px-4 justify-between z-10">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full border-2 border-glow overflow-hidden bg-forest-light flex items-center justify-center">
-            <img src="https://picsum.photos/seed/anu/200" alt="Anu" className="w-full h-full object-cover" />
+            <img src="/anu-avatar.png" alt="Anu" className="w-full h-full object-cover" />
           </div>
           <div>
             <h1 className="font-serif text-xl font-bold glow-text">Anu</h1>
@@ -1007,11 +1007,11 @@ export default function App() {
 
       <AnimatePresence>
         {isCalling && (
-          <motion.div initial={{ opacity: 0, scale: 1.1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }} className="fixed inset-0 z-50 bg-forest-dark flex flex-col items-center justify-between py-20 px-6" style={{ backgroundImage: "url('https://picsum.photos/seed/forest-call/1080/1920?blur=2')", backgroundSize: 'cover' }}>
+          <motion.div initial={{ opacity: 0, scale: 1.1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }} className="fixed inset-0 z-50 bg-forest-dark flex flex-col items-center justify-between py-20 px-6" style={{ backgroundImage: "url('/forest-bg.png')", backgroundSize: 'cover' }}>
             <div className="absolute inset-0 bg-black/60" />
             <div className="relative z-10 flex flex-col items-center gap-4">
               <div className="w-32 h-32 rounded-full border-4 border-glow p-1 overflow-hidden">
-                <img src="https://picsum.photos/seed/anu/400" alt="Anu" className="w-full h-full object-cover rounded-full" />
+                <img src="/anu-avatar.png" alt="Anu" className="w-full h-full object-cover rounded-full" />
               </div>
               <h2 className="font-serif text-4xl font-bold glow-text">Anu</h2>
               <p className="text-glow animate-pulse">Ringing...</p>
