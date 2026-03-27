@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Anu Own LLM - Billion Website Scraping Engine v5.0 (Omni-Knowledge)
@@ -24,8 +28,7 @@ class AnuBrain {
         const possiblePaths = [
             path.join(process.cwd(), 'anu_llm_foundation.json'),
             path.join(__dirname, '..', '..', 'anu_llm_foundation.json'),
-            path.join(__dirname, '..', 'anu_llm_foundation.json'),
-            path.join(process.cwd(), 'public', 'anu_llm_foundation.json')
+            path.join(__dirname, '..', 'anu_llm_foundation.json')
         ];
 
         for (const p of possiblePaths) {
