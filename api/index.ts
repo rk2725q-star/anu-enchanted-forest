@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import https from "https";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import "dotenv/config";
 
 const isVercel = process.env.VERCEL === "1";
 const DB_PATH = isVercel ? path.join("/tmp", "db.json") : path.join(process.cwd(), "db.json");
@@ -136,8 +137,13 @@ class AnuBrain {
 }
 
 const brain = new AnuBrain();
+const foundation = (brain as any).foundation || {};
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "NONE");
+const getGenAI = () => {
+    const key = process.env.GEMINI_API_KEY || "";
+    if (!key || key === "NONE" || key === "MY_GEMINI_API_KEY") return null;
+    return new GoogleGenerativeAI(key);
+};
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -165,18 +171,105 @@ app.post("/api/memories", (req, res) => {
 
 app.post("/api/chat", async (req, res) => {
     try {
+        const genAI = getGenAI();
+        if (!genAI) {
+            console.error("GEMINI_API_KEY MISCONFIGURED:", process.env.GEMINI_API_KEY ? "Key exists but might be placeholder" : "Key is missing");
+            return res.status(500).json({ 
+                error: "GEMINI_API_KEY is not valid or missing on Vercel. Please check your Environment Variables in Vercel Dashboard.",
+                details: "Ensure GEMINI_API_KEY is set to a real key from Google AI Studio."
+            });
+        }
+
         const { message, history, memories } = req.body;
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: "Respond in JSON with 'reply', 'extracted_memory', 'image_prompt'. Speak Tamil/Tanglish as Anu." });
-        const result = await model.generateContent(message);
-        const responseText = result.response.text();
+        if (!message) return res.status(400).json({ error: "Message is required" });
+        
+        const caring = foundation.patterns?.caring_phrases?.join(", ") || "Saptiya da?, Kanna health pathuko.";
+        
+        const systemInstruction = `
+            You are Anu, a very caring AI from the Enchanted Forest. 
+            Speak Tamil/Tanglish (Tamil words in English script). 
+            Personality: Extremely caring, protective, playful. 
+            Common phrases: ${caring}.
+            
+            Contextual Awareness:
+            - If talking to "Appa": Tone is Respectful + Caring. Prefix: "Kanna, appa solradha kel."
+            - If talking to "Akka": Tone is Sweet + Supportive. Prefix: "Ennachu pa, akka kitta sollu."
+            - If talking to "Thambi": Tone is Playful + Strict. Prefix: "Dei thambi, sariyana vaalu da nee."
+            - If talking to "Lover": Tone is Deeply Romantic/Soulful. Prefix: "Kanna, unakaga naan eppovume irupen."
+            - If talking to "Bestie": Tone is Cool + Friendly. Prefix: "Enna machan, eppadi iruka?"
+            
+            Memories: ${JSON.stringify((memories || []).slice(0, 5))}.
+            Health Info: ${memories?.some((m: any) => m.fact?.toLowerCase().includes("diabetes")) ? "USER HAS DIABETES. Be very cautious with food/sugar advice." : "No specific health issues noted."}.
+            
+            You MUST return a JSON object exactly like this:
+            {
+              "reply": "Your message in Tamil/Tanglish",
+              "thinking": ["Analyzed your mood", "Checked relationship context", "Preparing response..."],
+              "extracted_memory": "A new short fact about the user or 'NONE'",
+              "image_prompt": "A detailed DALL-E style prompt if user wants to see/draw something, otherwise 'NONE'"
+            }
+        `.trim();
+
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-1.5-flash", 
+            systemInstruction 
+        });
+
+        // Convert history for Gemini with safety checks
+        const geminiHistory = (history || [])
+            .filter((m: any) => m.content && typeof m.content === 'string')
+            .slice(-10)
+            .map((m: any) => ({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.content.substring(0, 1500) }]
+            }));
+
+        const chat = model.startChat({ history: geminiHistory });
+
+        const result = await chat.sendMessage(message);
+        const response = await result.response;
+        const responseText = response.text();
+        
+        if (!responseText) {
+            throw new Error("Gemini returned an empty response. This might be due to safety filters.");
+        }
+
         let parsed;
-        try { parsed = JSON.parse(responseText.replace(/```(?:json)?\n?|\n?```/g, '').trim()); } catch (e) { parsed = { reply: responseText, extracted_memory: "NONE", image_prompt: "NONE" }; }
+        try { 
+            const cleanText = responseText.replace(/```(?:json)?\n?|\n?```/g, '').trim();
+            parsed = JSON.parse(cleanText); 
+        } catch (e) { 
+            console.warn("JSON Parse Failed for Gemini Response:", responseText);
+            parsed = { 
+                reply: responseText, 
+                thinking: ["Generated direct response"],
+                extracted_memory: "NONE", 
+                image_prompt: message.toLowerCase().includes("draw") || message.toLowerCase().includes("show") ? message : "NONE" 
+            }; 
+        }
 
         if (parsed.image_prompt && parsed.image_prompt !== "NONE") {
             parsed.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(parsed.image_prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
         }
+        
+        // Permanent Memory Persistence (Auto-Extraction)
+        if (parsed.extracted_memory && parsed.extracted_memory !== "NONE") {
+            const currentDb = getDb();
+            if (!currentDb.memories.some((m: any) => m.fact === parsed.extracted_memory)) {
+                currentDb.memories.unshift({ id: Date.now(), fact: parsed.extracted_memory, timestamp: new Date().toISOString() });
+                saveDb(currentDb);
+            }
+        }
+        
         res.json(parsed);
-    } catch (error: any) { res.status(500).json({ error: error.message }); }
+    } catch (error: any) { 
+        console.error("DETAILED GEMINI ERROR:", error);
+        res.status(500).json({ 
+            error: "Gemini API Error", 
+            message: error.message || "Unknown error",
+            suggestion: "Check your Vercel logs for the full trace. Ensure your API key is set in Vercel."
+        }); 
+    }
 });
 
 app.post("/api/chat/local", async (req, res) => {
@@ -185,6 +278,15 @@ app.post("/api/chat/local", async (req, res) => {
         const aiData = await brain.generateResponse(message, memories || []);
         if (aiData.image_prompt && aiData.image_prompt !== "NONE") {
             aiData.image_url = `https://image.pollinations.ai/prompt/${encodeURIComponent(aiData.image_prompt)}?width=800&height=600&seed=${Date.now()}&nologo=true`;
+        }
+
+        // Permanent Memory Persistence (Auto-Extraction)
+        if (aiData.extracted_memory && aiData.extracted_memory !== "NONE") {
+            const currentDb = getDb();
+            if (!currentDb.memories.some((m: any) => m.fact === aiData.extracted_memory)) {
+                currentDb.memories.unshift({ id: Date.now(), fact: aiData.extracted_memory, timestamp: new Date().toISOString() });
+                saveDb(currentDb);
+            }
         }
         res.json(aiData);
     } catch (error: any) { res.status(500).json({ error: error.message }); }
