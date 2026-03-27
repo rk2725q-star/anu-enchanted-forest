@@ -160,6 +160,22 @@ const saveDb = (data: any) => {
 };
 
 app.get("/api/messages", (req, res) => res.json(getDb().messages));
+app.post("/api/messages", (req, res) => {
+    const db = getDb();
+    const newMsg = { id: Date.now(), ...req.body, timestamp: new Date().toISOString() };
+    db.messages.push(newMsg);
+    saveDb(db);
+    res.json(newMsg);
+});
+
+app.post("/api/messages/ai", (req, res) => {
+    const db = getDb();
+    const newMsg = { id: Date.now(), role: 'model', ...req.body, timestamp: new Date().toISOString() };
+    db.messages.push(newMsg);
+    saveDb(db);
+    res.json(newMsg);
+});
+
 app.get("/api/memories", (req, res) => res.json(getDb().memories));
 app.post("/api/memories", (req, res) => {
     const db = getDb();
@@ -169,20 +185,41 @@ app.post("/api/memories", (req, res) => {
     res.json(newMemo);
 });
 
+app.post("/api/models", async (req, res) => {
+    const { provider, key } = req.body;
+    if (!key) return res.json({ models: [] });
+    try {
+        let models = [];
+        if (provider === 'gemini') {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            const d = await r.json();
+            models = d.models?.filter((m: any) => m.supportedGenerationMethods.includes('generateContent')).map((m: any) => m.name.replace('models/', '')) || [];
+        } else if (provider === 'nvidia') {
+            const r = await fetch('https://integrate.api.nvidia.com/v1/models', { headers: { 'Authorization': `Bearer ${key}` } });
+            const d = await r.json();
+            models = d.data?.map((m: any) => m.id) || [];
+        }
+        res.json({ models });
+    } catch (e) { res.json({ models: [] }); }
+});
+
 app.post("/api/chat", async (req, res) => {
     try {
-        const genAI = getGenAI();
-        if (!genAI) {
-            console.error("GEMINI_API_KEY MISCONFIGURED:", process.env.GEMINI_API_KEY ? "Key exists but might be placeholder" : "Key is missing");
+        const { message, history, memories, settings } = req.body;
+        if (!message) return res.status(400).json({ error: "Message is required" });
+        
+        // Use custom key if provided, otherwise fallback to server environment variable
+        const userKey = settings?.gemini?.key || process.env.GEMINI_API_KEY;
+        const selectedModel = settings?.gemini?.model || "gemini-1.5-flash";
+
+        if (!userKey || userKey === "NONE" || userKey === "MY_GEMINI_API_KEY") {
             return res.status(500).json({ 
-                error: "GEMINI_API_KEY is not valid or missing on Vercel. Please check your Environment Variables in Vercel Dashboard.",
-                details: "Ensure GEMINI_API_KEY is set to a real key from Google AI Studio."
+                error: "GEMINI_API_KEY is missing.",
+                details: "Please provide a key in settings or set it in Vercel environment variables."
             });
         }
 
-        const { message, history, memories } = req.body;
-        if (!message) return res.status(400).json({ error: "Message is required" });
-        
+        const genAI = new GoogleGenerativeAI(userKey.trim());
         const caring = foundation.patterns?.caring_phrases?.join(", ") || "Saptiya da?, Kanna health pathuko.";
         
         const systemInstruction = `
@@ -211,7 +248,7 @@ app.post("/api/chat", async (req, res) => {
         `.trim();
 
         const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash", 
+            model: selectedModel, 
             systemInstruction 
         });
 
