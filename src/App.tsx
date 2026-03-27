@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { chatWithAnu, generateAnuVoice, generateAnuImage } from './services/geminiService';
+import { Settings as SettingsIcon } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -181,6 +182,135 @@ export default function App() {
   const [useAnuModel, setUseAnuModel] = useState(false);
   const [memories, setMemories] = useState<any[]>([]);
 
+  // Security: Simple obfuscation for keys in LocalStorage
+  const obfuscate = (str: string) => {
+    if (!str) return '';
+    return btoa(unescape(encodeURIComponent(str.split('').reverse().join(''))));
+  };
+  const deobfuscate = (str: string) => {
+    if (!str) return '';
+    try {
+        return decodeURIComponent(escape(atob(str))).split('').reverse().join('');
+    } catch(e) { return ''; }
+  };
+
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('anu_api_settings_v2');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+            gemini: { key: deobfuscate(parsed.gemini?.key), model: parsed.gemini?.model || '' },
+            ollama: { key: deobfuscate(parsed.ollama?.key), model: parsed.ollama?.model || '' },
+            nvidia: { key: deobfuscate(parsed.nvidia?.key), model: parsed.nvidia?.model || '' }
+        };
+    }
+    return {
+      gemini: { key: '', model: '' },
+      ollama: { key: '', model: '' },
+      nvidia: { key: '', model: '' }
+    };
+  });
+  
+  const [availableModels, setAvailableModels] = useState<any>({
+    gemini: [],
+    ollama: [],
+    nvidia: []
+  });
+  const [isFetchingModels, setIsFetchingModels] = useState(false);
+
+  useEffect(() => {
+    const secureSettings = {
+        gemini: { ...settings.gemini, key: obfuscate(settings.gemini.key) },
+        ollama: { ...settings.ollama, key: obfuscate(settings.ollama.key) },
+        nvidia: { ...settings.nvidia, key: obfuscate(settings.nvidia.key) }
+    };
+    localStorage.setItem('anu_api_settings_v2', JSON.stringify(secureSettings));
+  }, [settings]);
+
+  const fetchModels = async (provider: string, key: string) => {
+    if (!key) {
+      setAvailableModels((prev: any) => ({ ...prev, [provider]: [] }));
+      return;
+    }
+    setIsFetchingModels(true);
+    try {
+      const res = await fetch('/api/models', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, key })
+      });
+      const data = await res.json();
+      const models = data.models || [];
+      
+      setAvailableModels((prev: any) => ({ ...prev, [provider]: models }));
+      
+      // Auto-select first model if none selected
+      if (models.length > 0 && !settings[provider as keyof typeof settings].model) {
+        setSettings((prev: any) => ({
+          ...prev,
+          [provider]: { ...prev[provider as keyof typeof prev], model: models[0] }
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching models', error);
+    } finally {
+      setIsFetchingModels(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchModels('gemini', settings.gemini.key);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [settings.gemini.key]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchModels('ollama', settings.ollama.key);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [settings.ollama.key]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchModels('nvidia', settings.nvidia.key);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [settings.nvidia.key]);
+
+  const renderSettingsFor = (provider: string, title: string) => (
+    <div className="mb-4 p-3 bg-black/20 rounded-xl border border-glow/10">
+      <h3 className="text-glow font-bold mb-2 uppercase text-xs tracking-widest">{title}</h3>
+      <input 
+        type="password" 
+        value={settings[provider as keyof typeof settings].key}
+        onChange={(e) => setSettings({...settings, [provider]: {...settings[provider as keyof typeof settings], key: e.target.value}})}
+        placeholder="API Key" 
+        className="w-full bg-black/40 border border-glow/20 rounded-lg p-2 text-white mb-2 focus:border-glow outline-none text-sm"
+      />
+      {(availableModels[provider]?.length > 0) ? (
+        <select 
+          value={settings[provider as keyof typeof settings].model}
+          onChange={(e) => setSettings({...settings, [provider]: {...settings[provider as keyof typeof settings], model: e.target.value}})}
+          className="w-full bg-black/40 border border-glow/20 rounded-lg p-2 text-white focus:border-glow outline-none text-sm"
+        >
+          <option value="">Select a model...</option>
+          {availableModels[provider]?.map((m: string) => <option key={m} value={m}>{m}</option>)}
+        </select>
+      ) : (
+        <input 
+          type="text" 
+          value={settings[provider as keyof typeof settings].model}
+          onChange={(e) => setSettings({...settings, [provider]: {...settings[provider as keyof typeof settings], model: e.target.value}})}
+          placeholder={`Enter model manually... (or wait for auto-fetch)`} 
+          className="w-full bg-black/40 border border-glow/20 rounded-lg p-2 text-white focus:border-glow outline-none text-sm"
+        />
+      )}
+    </div>
+  );
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const liveSessionRef = useRef<any>(null);
@@ -255,11 +385,30 @@ export default function App() {
         const localRes = await fetch('/api/chat/local', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: currentInput, memories })
+          body: JSON.stringify({ message: currentInput, memories, settings })
         });
         aiData = await localRes.json();
       } else {
-        aiData = await chatWithAnu(currentInput, messages, memories);
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: currentInput, history: messages, memories, settings })
+        });
+        aiData = await res.json();
+      }
+
+      // Handle server errors gracefully
+      if (aiData.error) {
+        setIsThinking(false);
+        const errorReply = `⚠️ **Server Error:** ${aiData.error}\n\n*Note: ${aiData.details || aiData.message || "Check your Vercel logs and API key."}*`;
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          role: 'model' as const,
+          content: errorReply,
+          type: MessageType.TEXT,
+          timestamp: new Date().toISOString()
+        }]);
+        return;
       }
 
       const aiReply = aiData.reply || "I'm here for you.";
@@ -317,7 +466,12 @@ export default function App() {
       const savedMsg = await res.json();
       setMessages(prev => [...prev, savedMsg]);
 
-      const aiData = await chatWithAnu(`I just sent you a ${file.type.startsWith('image') ? 'photo' : 'file'}. What do you think?`, messages, memories);
+      const chatRes = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `I just sent you a ${file.type.startsWith('image') ? 'photo' : 'file'}. What do you think?`, history: messages, memories, settings })
+      });
+      const aiData = await chatRes.json();
       const aiReply = aiData.reply || "I'm here for you.";
       const aiImageUrl = aiData.image_url;
 
@@ -388,7 +542,12 @@ export default function App() {
           const savedMsg = await res.json();
           setMessages(prev => [...prev, savedMsg]);
 
-          const aiData = await chatWithAnu("I just sent you a voice message. How are you feeling today?", messages, memories);
+          const chatRes = await fetch('/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: "I just sent you a voice message. How are you feeling today?", history: messages, memories, settings })
+          });
+          const aiData = await chatRes.json();
           const aiReply = aiData.reply || "I'm here for you.";
           const aiImageUrl = aiData.image_url;
 
@@ -551,6 +710,16 @@ export default function App() {
                   >
                     <ImageIcon className="w-4 h-4" />
                     Generate Image
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsSettingsModalOpen(true);
+                      setShowMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-glow/20 text-glow transition-colors text-sm border-t border-glow/10"
+                  >
+                    <SettingsIcon className="w-4 h-4" />
+                    Settings
                   </button>
                   <button
                     onClick={() => {
@@ -786,6 +955,50 @@ export default function App() {
                 <p className="text-[10px] text-white/40 text-center italic">
                   Powered by Gemini Flash Image • Free & Unlimited
                 </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Settings Modal */}
+      <AnimatePresence>
+        {isSettingsModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="wood-panel w-full max-w-md rounded-3xl border border-glow/30 p-6 shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-serif text-xl font-bold text-glow flex items-center gap-2">
+                  <SettingsIcon className="w-6 h-6" /> AI Providers
+                </h2>
+                <button onClick={() => setIsSettingsModalOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
+                  <X className="w-6 h-6 text-white/60" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <p className="text-sm text-white/70 mb-4 rounded bg-black/30 p-3 italic">
+                  Provide your API keys below. Anu will try them in order. If Gemini quota is over, she falls back to Ollama smoothly, then Nvidia.
+                </p>
+                {renderSettingsFor('gemini', '1. Gemini (Google)')}
+                {renderSettingsFor('ollama', '2. Ollama Cloud')}
+                {renderSettingsFor('nvidia', '3. Nvidia Cloud')}
+                
+                <button
+                  onClick={() => setIsSettingsModalOpen(false)}
+                  className="w-full mt-4 bg-glow text-forest-dark py-4 rounded-xl font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-lg shadow-glow/20"
+                >
+                  Save & Return
+                </button>
               </div>
             </motion.div>
           </motion.div>
